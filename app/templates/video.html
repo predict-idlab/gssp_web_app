@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+
+{# TODO -> message flashing informed consent #}
+
+
+{% block body %}
+    {% from 'includes/_formhelpers.html' import render_field %}
+    <div class="col-xs-10">
+        <div class="jumbotron-fluid" style="background-color: #f9f9f9;">
+            <h1 style="text-align: center;">Videos</h1>
+            <div style="margin-left: 2%">
+                <h3>Tekst voorlezen</h3>
+                <div style="text-align: center; width: 50vw!important;">
+                    <video controls>
+                        <source src="{{ url_for('static', filename='video/marloes.webm') }}" type="video/webm">
+                    </video>
+                </div>
+            </div>
+            <br>
+            <div style="margin-left: 2%">
+                <h3>Afbeelding beschrijven</h3>
+                <h4>Gezicht</h4>
+                <div style="text-align: center; width: 50vw!important; outline: none;">
+                    <video controls>
+                        <source src="{{ url_for('static', filename='video/radboud.webm') }}" type="video/webm">
+                    </video>
+                </div>
+                <br><br>
+                <h4>Cartoon</h4>
+                <div style="text-align: center; width: 50vw!important; outline: none;">
+                    <video controls>
+                        <source src="{{ url_for('static', filename='video/pisces.webm') }}" type="video/webm">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

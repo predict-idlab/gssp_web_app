@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!-- TODO improve bootstrap css -->
+{#    <link id="themecss" rel="stylesheet" type="text/css"#}
+{#          href="//www.shieldui.com/shared/components/latest/css/light/all.min.css"/>#}
+    <link id="mycss" rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+{#    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>#}
+{#    <script type="text/javascript" src="//www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>#}
+
+    <!--Extra link tags for the extended html page.-->
+    {% block link %} {% endblock %}
+
+    <!-- Icon in the title bar -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/headphone.svg') }}" type="image/svg">
+
+    <!-- Check for the title -->
+    <title>
+        {% if g.title %}
+            {{ g.title }}
+        {% else %}
+            Halfbegeleide spraak
+        {% endif %}
+    </title>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+{# display the flash messages #}
+<div class="container-fluid">
+    {% include 'includes/_messages.html' %}
+    {% block body %}{% endblock %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

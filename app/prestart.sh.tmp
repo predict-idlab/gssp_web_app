@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+# The image will automatically detect and run it before starting everything.
+
+# Run custom Python script before starting
+python /app/idlab_cloud_sync_bg.py &
+# exit 0;

@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block link %}
+    <script src="{{ url_for('static', filename='_js/recorderWorker.js') }}"></script>
+    <script src="{{ url_for('static', filename='_js/recorder.js') }}"></script>
+    <script src="{{ url_for('static', filename='_js/audiodisplay.js') }}"></script>
+    <script src="{{ url_for('static', filename='_js/main.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="col-xs-10">
+        <div class="jumbotron-fluid" style="background-color: #f9f9f9;">
+            <h2 style="text-align: center"> Afbeelding {{ index + 1 }}</h2>
+
+            <div id="img_div">
+                <div class="text-center" style="height: 70vh!important; width: auto;">
+                    <img id="afbeelding" src="{{ url_for('static', filename=photo_path) }}"
+                         alt="{{ photo_path }}" style="max-height: 100%; opacity: 0;"/>
+                </div>
+
+                <br>
+                <div class="container-fluid">
+                    <div style="text-align: center">
+                        <button id="btn_start" class="btn btn-success" onclick="wrap_start_recording()">Start</button>
+                        <button id="btn_stop" class="btn btn-danger" style="margin-left: 20px"
+                                onclick="stop_send_recording()"
+                                disabled>Stop
+                        </button>
+                        {% if demo %}
+                            <br><br>
+                            <button id="btn_timer" class="btn btn-info" disabled style="width: 5vw; text-align: center"
+                            >0s
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <div id="valence_arousal_div" hidden>
+                <div id="label-container" class="container-fluid" style="text-align: center;">
+                    Valentie<br>
+                    <label for="negatief" class="pull-left">Negatief</label>
+                    <input id="valence_slider" type="range" min="0" max="100" value="50" style="width: 40vw;" disabled>
+                    <label for="positief" class="pull-right">Positief</label>
+                    <br><br>
+                    Opwinding<br>
+                    <label for="passief" class="pull-left">Passief</label>
+                    <input id="arousal_slider" type="range" min="0" max="100" value="50" style="width: 40vw;" disabled>
+                    <label for="actief" class="pull-right">Actief</label>
+                </div>
+                <br>
+
+                <form method="post" style="text-align: center;" id="hiddenform" hidden></form>
+
+                <div style="text-align: center">
+                    <button id="btn_next" class="btn btn-info" value="next"
+                            onclick="send_arousal_valence()" disabled hidden>Volgende
+                    </button>
+                </div>
+            </div>
+
+            <br>
+            <canvas id="analyser" style="width:100%;height:150px;background-color: whitesmoke" width="1024"
+                    height="500"{% if not debug %} hidden {% endif %}></canvas>
+            <br>
+            <textarea id="output" style="width: 100%;height: 100px" readonly {% if not debug %}
+                      hidden {% endif %}></textarea>
+        </div>
+    </div>
+
+    <script>
+        let time_passed = 0;
+
+        function count_up() {
+            time_passed += 1;
+            document.getElementById('btn_timer').innerHTML = time_passed + 's';
+        }
+
+        function wrap_start_recording() {
+            startRecording();
+            document.getElementById('btn_start').disabled = true;
+            document.getElementById('btn_stop').removeAttribute('disabled');
+            document.getElementById('afbeelding').style.opacity = "1.0";
+            if (document.getElementById('btn_timer')) {
+                setInterval(count_up, 1000);
+            }
+        }
+
+        function stop_send_recording() {
+            document.getElementById('btn_stop').disabled = true;
+            document.getElementById('btn_start').disabled = true;
+            document.getElementById('img_div').hidden = true;
+            stopRecording();
+            document.getElementById('valence_arousal_div').hidden = false;
+            document.getElementById('arousal_slider').removeAttribute('disabled');
+            document.getElementById('valence_slider').removeAttribute('disabled');
+        }
+
+        function send_arousal_valence() {
+            let arousal = document.getElementById('arousal_slider').value;
+            let valence = document.getElementById('valence_slider').value;
+
+            let file_name = document.getElementById('afbeelding').src.split('/');
+            file_name = file_name.slice(Math.max(file_name.length - 2, 1)).join('/').split('.')[0];
+            file_name += "__" + new Date().toLocaleTimeString('nl-BE', {hour12: false});
+
+            fetch('/mood/' + file_name, {
+                headers: {'Content-Type': 'application/json'},
+                method: "POST",
+                body: JSON.stringify({arousal: arousal, valence: valence})
+            }).then(response => {
+                if (!response.ok) {
+                    alert(response.text());
+                    console.log(response.text());
+                } else {
+                    console.log(response.text());
+                    document.getElementById("hiddenform").submit();
+                }
+            });
+        }
+
+        {# Enable next button once both valence arousal scales are interacted with #}
+        let arousal_clicked = false;
+        let valence_clicked = false;
+        $("#arousal_slider").click(function () {
+            arousal_clicked = true;
+            if (valence_clicked) {
+                document.getElementById('btn_next').removeAttribute('disabled');
+            }
+        });
+        $("#valence_slider").click(function () {
+            valence_clicked = true;
+            if (arousal_clicked) {
+                document.getElementById('btn_next').removeAttribute('disabled');
+            }
+        });
+    </script>
+{% endblock %}

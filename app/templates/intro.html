@@ -1,0 +1,159 @@
+{% extends 'layout.html' %}
+
+
+{# TODO -> message flashing informed consent #}
+
+
+{% block body %}
+    {% from 'includes/_formhelpers.html' import render_field %}
+    <div class="container">
+        <div class="col-xs-10">
+            <div class="jumbotron" style="background-color: #f9f9f9;">
+                <h1 style="text-align: center;">Introductie</h1>
+                <br>
+                <div style="text-align: justify">
+                    Voordat we beginnen zijn er een aantal belangrijke dingen:
+                    <br><br>
+                    <ul>
+                        <li>
+                            Deze taak is enkel uit te voeren op een laptop/computer.
+                        </li>
+                        <li>
+                            Gelieve uw oortelefoons/koptelefoon of iets dergelijks
+                            te gebruiken met microfoon; dit
+                            zorgt voor hoge kwaliteit opnames. Indien u zeker bent dat
+                            de microfoon van uw computer van voldoende
+                            hoge kwaliteit is, mag u deze gebruiken.
+                        </li>
+                        <li>
+                            Zorg dat u plaatsneemt in een rustige omgeving waar u 30
+                            minuten omringt wordt door zo min
+                            mogelijk afleiding en geluid.
+                        </li>
+                        <li>
+                            Zorg dat u een glas water bij uw laptop/computer hebt staan.
+                        </li>
+                        <li>
+                            Tijdens de taak zitten een aantal korte drinkpauzes zodat u
+                            geen droge keel krijgt door het
+                            veelvuldig praten – ook dit zorgt voor hoge kwaliteit
+                            opnames.
+                        </li>
+                    </ul>
+
+                    Tot slot vragen we u ook nog om onderstaande gegevens in te vullen:
+                </div>
+                <br>
+                <form method="POST">
+                    <dl>
+                        <div style="margin-left: 5%">
+                            {{ form.hidden_tag() }}
+                            {{ render_field(form.sex) }}
+                            {{ render_field(form.age) }}
+                            {{ render_field(form.education) }}
+                            {{ render_field(form.device) }}
+
+                            <br>
+
+                            <h5>Informed consent:</h5>
+                            Door akkoord te gaan verklaar ik hierbij dat ik als
+                            proefpersoon aan een online pilot-studie van
+                            de Universiteit Gent deelneem en het eens ben met de
+                            volgende punten:
+                            <br>
+                            <ol>
+                                <li>Ik heb uitleg gekregen over de aard van de vragen,
+                                    taken,  opdrachten en stimuli die tijdens dit
+                                    onderzoek zullen worden aangeboden, gekregen en dat
+                                    mij de mogelijkheid werd geboden om
+                                    bijkomende informatie te verkrijgen.
+                                </li>
+                                <li>
+                                    Ik begrijp dat deelname aan de studie vrijwillig is
+                                    en dat ik mij op elk ogenblik uit de
+                                    studie mag terugtrekken zonder een reden voor deze
+                                    beslissing op te geven en zonder dat
+                                    dit op enige wijze een invloed zal hebben op
+                                    mijn verdere relatie met de
+                                    onderzoekers.
+                                </li>
+                                <li>
+                                    Ik geef toestemming om mijn resultaten op
+                                    vertrouwelijke wijze te bewaren, te verwerken
+                                    en anoniem te rapporteren.
+                                </li>
+                                <li>
+                                    Ik geef toestemming om mijn gepseudonimiseerde
+                                    dataset (niet meer terug te leiden naar
+                                    de identiteit van de participant) online beschikbaar
+                                    te stellen voor
+                                    onderzoeksdoeleinden
+                                </li>
+                                <li>
+                                    Ik geef toestemming dat mijn spraak opnames online
+                                    beschikbaar gesteld worden in een
+                                    database voor onderzoeksdoeleinden. Deze opnames
+                                    zullen niet openbaar gemaakt worden in
+                                    combinatie met persoonlijke gegevens.
+                                </li>
+                                <li>
+                                    Ik begrijp dat auditors, vertegenwoordigers van de
+                                    opdrachtgever, de Commissie voor
+                                    Medische Ethiek of bevoegde overheden, mijn gegevens
+                                    mogelijks willen inspecteren om de
+                                    verzamelde informatie te controleren. Door dit
+                                    document te ondertekenen geef ik
+                                    toestemming voor deze controle. Bovendien ben ik op
+                                    de hoogte dat bepaalde gegevens
+                                    doorgegeven worden aan de opdrachtgever. Ik geef
+                                    hiervoor mijn toestemming, zelfs indien
+                                    dit betekent dat mijn gegevens doorgegeven worden
+                                    aan een land buiten de Europese Unie.
+                                    Te allen tijde zal mijn privacy gerespecteerd
+                                    worden.
+                                </li>
+                                <li>
+                                    Ik begrijp dat persoonlijke gegevens worden verwerkt
+                                    en bewaard gedurende minstens 20
+                                    jaar. Ik stem hiermee in en ben op de hoogte dat ik
+                                    recht heb op toegang en op
+                                    verbetering van deze gegevens. Aangezien deze
+                                    gegevens verwerkt worden in het kader van
+                                    medisch-wetenschappelijke doeleinden, begrijp ik dat
+                                    de toegang tot mijn gegevens kan
+                                    uitgesteld worden tot na beëindiging van het
+                                    onderzoek. Uw gepseudonimiseerde gegevens
+                                    kunnen tevens worden gebruikt voor verder onderzoek
+                                    in het kader van emotieregulatie.
+                                    Indien ik toegang wil tot mijn gegevens, zal ik mij
+                                    richten tot de onderzoeker die
+                                    verantwoordelijk is voor de verwerking.
+                                </li>
+                                <li>
+                                    Ik begrijp dat ik het recht heb op de hoogte te zijn
+                                    van de resultaten van het huidige
+                                    onderzoek.
+                                </li>
+                            </ol>
+                            Voor meer informatie omtrent het huidige onderzoek of bij
+                            vragen over het onderzoek of dit
+                            Informed Consent formulier kunt u contact opnemen met
+                            Mitchel.Kappen@UGent.be
+                        </div>
+                        <br>
+                        <div style="text-align: center">
+                            {{ render_field(form.accept_tos) }}
+                            {{ render_field(form.prolific_token) }}
+                        </div>
+                        <br>
+                        <div style="text-align: center">
+                            <dd><input type="submit" class="btn btn-primary"
+                                       value="Ga door"></dd>
+                        </div>
+                    </dl>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

@@ -39,10 +39,11 @@
         <br>
 
         <form method="post" style="text-align: center;" id="hiddenform" hidden></form>
+        <div id="uploadingdiv" style="text-align: center;" hidden>uploading speech data ...</div>
         <div id="gonext" hidden>
             <div style="text-align: center">
                 <button id="btn_next" class="btn btn-info" value="next" onclick="send_arousal_valence()" disabled
-                    hidden>Next image
+                    hidden>Continue
                 </button>
             </div>
         </div>
@@ -79,11 +80,11 @@
         document.getElementById('btn_start').disabled = true;
         document.getElementById('startstopbtndiv').hidden = true;
         document.getElementById('afbeelding').style.opacity = "0.0";
-        document.getElementById('gonext').hidden = false;
+        document.getElementById('uploadingdiv').hidden = false;
         stopRecording();
+        document.getElementById('uploadingdiv').hidden = true;
+        document.getElementById('gonext').hidden = false;
         document.getElementById('btn_next').disabled = false;
-        document.getElementById('arousal_slider').removeAttribute('disabled');
-        document.getElementById('valence_slider').removeAttribute('disabled');
     }
 
     function send_arousal_valence() {

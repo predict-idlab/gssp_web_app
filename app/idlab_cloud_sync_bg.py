@@ -25,7 +25,7 @@ def sync_all_folders(interval_time_s: int = 60 * 60 * 2):
         t_start = time.time()
         try:
             a.info(module='offloader', info_text='trying to sync collected in background thread')
-            sync = RcloneNextcloudSync(remote='idlab', remote_root_path='/speech_web_app/backup',
+            sync = RcloneNextcloudSync(remote='idlab', remote_root_path='/speech_web_app/ACE/backup',
                                        rclone_conf_path=AppConfig.RCLONE_CONF_PATH.value, debug=False)
 
             # iterate over all the folders in the data dir

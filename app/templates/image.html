@@ -39,7 +39,9 @@
         <br>
 
         <form method="post" style="text-align: center;" id="hiddenform" hidden></form>
-        <div id="uploadingdiv" style="text-align: center;" hidden>uploading speech data ...</div>
+        <div id="uploadingdiv" style="text-align: center;" hidden>
+            uploading speech data ...
+        </div>
         <div id="gonext" hidden>
             <div style="text-align: center">
                 <button id="btn_next" class="btn btn-info" value="next" onclick="send_arousal_valence()" disabled
@@ -81,9 +83,9 @@
         document.getElementById('startstopbtndiv').hidden = true;
         document.getElementById('afbeelding').style.opacity = "0.0";
         document.getElementById('uploadingdiv').hidden = false;
-        stopRecording();
-        document.getElementById('uploadingdiv').hidden = true;
         document.getElementById('gonext').hidden = false;
+        stopRecording();
+        document.getElementById('uploadingdiv').innerText = "";
         document.getElementById('btn_next').disabled = false;
     }
 

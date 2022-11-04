@@ -1,5 +1,13 @@
 # Speech web app
 
+This branch witthholds a stripped version of the speech web-app with the following differences:
+
+It is tailored towards a *first childhood event* study, where participants will only
+obtain 1-2 images to describe.
+
+The identifier of this study will be held within the URL that is sent to the end-user.
+
+
 ## Running the web app
 
 ### Via Python

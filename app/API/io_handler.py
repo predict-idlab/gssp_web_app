@@ -40,6 +40,13 @@ class SessionIOHandler:
             json.dump(metadata, fp, indent=4, sort_keys=True)
 
     @staticmethod
+    def save_metadata_sf(uuid: str, metadata: dict):
+        save_dir = SessionIOHandler._get_save_dir(uuid)
+        metadata['timestamp'] = str(datetime.now(tz=timezone('US/Pacific')))
+        with open(save_dir.joinpath('metadata.json'), 'w') as fp:
+            json.dump(metadata, fp, indent=4, sort_keys=True)
+
+    @staticmethod
     def save_wav(uuid: str, file_path: str, data: bytes):
         file_path += '.wav' if not file_path.endswith('.wav') else ''
         save_path = SessionIOHandler._get_save_dir(uuid).joinpath(file_path)

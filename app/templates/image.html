@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block link %}
+<script src="{{ url_for('static', filename='_js/recorderWorker.js') }}"></script>
+<script src="{{ url_for('static', filename='_js/recorder.js') }}"></script>
+<script src="{{ url_for('static', filename='_js/audiodisplay.js') }}"></script>
+<script src="{{ url_for('static', filename='_js/main.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="col-xs-10">
+    <div class="jumbotron-fluid" style="background-color: #f9f9f9;">
+        <!-- <h2 style="text-align: center"> Image {{ index + 1 }}</h2> -->
+        <br>
+
+        <div id="img_div">
+            <div class="text-center" style="height: 70vh!important; width: auto;">
+                <img id="afbeelding" src="{{ url_for('static', filename=photo_path) }}" alt="{{ photo_path }}"
+                    style="max-height: 100%; opacity: 0;" />
+            </div>
+
+            <br>
+            <div class="container-fluid">
+                <div style="text-align: center">
+                    <div id="startstopbtndiv">
+                        <button id="btn_start" class="btn btn-success" onclick="wrap_start_recording()">Start</button>
+                        <button id="btn_stop" class="btn btn-danger" style="margin-left: 20px"
+                            onclick="stop_send_recording()" disabled>Stop
+                        </button>
+                    </div>
+                    {% if demo %}
+                    <br><br>
+                    <button id="btn_timer" class="btn btn-info" disabled style="width: 5vw; text-align: center">0s
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <form method="post" style="text-align: center;" id="hiddenform" hidden></form>
+        <div id="gonext" hidden>
+            <div style="text-align: center">
+                <button id="btn_next" class="btn btn-info" value="next" onclick="send_arousal_valence()" disabled
+                    hidden>Next image
+                </button>
+            </div>
+        </div>
+
+        <br>
+        <canvas id="analyser" style="width:100%;height:150px;background-color: whitesmoke" width="1024" height="500" {%
+            if not debug %} hidden {% endif %}></canvas>
+        <br>
+        <textarea id="output" style="width: 100%;height: 100px" readonly {% if not debug %} hidden {% endif
+            %}></textarea>
+    </div>
+</div>
+
+<script>
+    let time_passed = 0;
+
+    function count_up() {
+        time_passed += 1;
+        document.getElementById('btn_timer').innerHTML = time_passed + 's';
+    }
+
+    function wrap_start_recording() {
+        startRecording();
+        document.getElementById('btn_start').disabled = true;
+        document.getElementById('btn_stop').removeAttribute('disabled');
+        document.getElementById('afbeelding').style.opacity = "1.0";
+        if (document.getElementById('btn_timer')) {
+            setInterval(count_up, 1000);
+        }
+    }
+
+    function stop_send_recording() {
+        document.getElementById('btn_stop').disabled = true;
+        document.getElementById('btn_start').disabled = true;
+        document.getElementById('startstopbtndiv').hidden = true;
+        document.getElementById('afbeelding').style.opacity = "0.0";
+        document.getElementById('gonext').hidden = false;
+        stopRecording();
+        document.getElementById('btn_next').disabled = false;
+        document.getElementById('arousal_slider').removeAttribute('disabled');
+        document.getElementById('valence_slider').removeAttribute('disabled');
+    }
+
+    function send_arousal_valence() {
+        document.getElementById("hiddenform").submit();
+    }
+</script>
+{% endblock %}

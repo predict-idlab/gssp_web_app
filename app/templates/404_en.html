@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="col-xs-10">
+        <div class="jumbotron" style="background-color: #f9f9f9;">
+            <div style="text-align: center; vertical-align: middle">
+                <h1>Page not found!</h1>
+                <br><br>
+                <div style="text-align: justify;">
+                    <b>Error message</b>:<br><br>
+                    {{ error }}
+                    <br>
+                </div>
+                <div style="text-align: center;">
+                    <input class="btn btn-info" onclick="location.href='{{ url_for('index') }}'" value="Go to home">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

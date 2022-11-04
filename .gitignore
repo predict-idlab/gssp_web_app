@@ -54,3 +54,4 @@ venv/
  
 /app/API/rclone_conf.json
 /deployment/standard/
+data/

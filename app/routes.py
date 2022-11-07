@@ -30,6 +30,7 @@ def index():
 
 @app.route("/home/<user_id>")
 def home(user_id):
+    headers = dict(request.headers)
     uuid_str = "_".join(["ACE", user_id, str(uuid.uuid4())])
     session["uuid"] = uuid_str
     session["user_id"] = user_id
@@ -40,7 +41,9 @@ def home(user_id):
     session.pop("img_order", None)
 
     # store the user_id in the uuid folder
-    SessionIOHandler.save_metadata_sf(uuid=uuid_str, metadata={"user_id": user_id})
+    SessionIOHandler.save_metadata_sf(
+        uuid=uuid_str, metadata={"user_id": user_id, "headers": headers}
+    )
     return render_template("welcome_info.html", user_id=user_id)
 
 
@@ -80,11 +83,11 @@ def recording():
             photo_path=static_path,
             debug=Ac.FLASK_DEBUG.value,
             demo=db_name.lower() == "demo",
+            continue_text="Continue",
         )
-
     # todo -> hoe iets verhogen door niet reload maar door op knop te klikken
-    elif request.method == "POST":
-        if session["allow_next"]:  # increse the image index
+    else:
+        if session["allow_next"]:  # increase the image index
             print("-" * 10, "allow next granted", "-" * 10)
             session["img_index"] = session["img_index"] + 1
 
@@ -98,30 +101,22 @@ def recording():
 
         # load the next image and render the template
         img_name, db_name = session["img_order"][session["img_index"]]
-        if db_name.lower() == "demo":
-            static_path = DEMO_DB.get_img_path(img_name).split("static/")[1]
-        else:
-            static_path = PISCES_RADBOUD_BD.get_img_path(
-                img_name=img_name, db_name=db_name
-            ).split("static/")[1]
-        return render_template(
-            "image.html",
-            index=session["img_index"],
-            photo_path=static_path,
-            debug=Ac.FLASK_DEBUG.value,
-            demo=db_name.lower() == "demo",
-        )
-    else:
-        img_name, db_name = session["img_order"][session["img_index"]]
         static_path = PISCES_RADBOUD_BD.get_img_path(
             img_name=img_name, db_name=db_name
         ).split("static/")[1]
+        continue_text = (
+            "Continue"
+            if session["img_index"] < len(session["img_order"]) - 1
+            else "Finish"
+        )
+
         return render_template(
             "image.html",
             index=session["img_index"],
             photo_path=static_path,
             debug=Ac.FLASK_DEBUG.value,
             demo=db_name.lower() == "demo",
+            continue_text=continue_text,
         )
 
 

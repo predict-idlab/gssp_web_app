@@ -15,6 +15,8 @@
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
+console.log('v1.0');
+
 var audioContext = new AudioContext();
 var audioInput = null,
     realAudioInput = null,
@@ -27,7 +29,7 @@ var recIndex = 0;
 
 
 function gotBuffers(buffers, file_id) {
-    audioRecorder.exportMonoWAV(doneEncoding);
+    audioRecorder.exportWAV(doneEncoding);
 }
 
 function doneEncoding(soundBlob) {
@@ -35,7 +37,7 @@ function doneEncoding(soundBlob) {
     // TODO -> change this hard_coded file name code
     let file_name = document.getElementById('afbeelding').src.split('/');
     file_name = file_name.slice(Math.max(file_name.length - 2, 1)).join('/').split('.')[0];
-    file_name += "__" + new Date().toLocaleTimeString('nl-BE', {hour12: false});
+    file_name += "__" + new Date().toLocaleTimeString('nl-BE', { hour12: false });
 
     $.ajax({
         type: "POST",
@@ -129,19 +131,6 @@ function updateAnalysers(time) {
     rafID = window.requestAnimationFrame(updateAnalysers);
 }
 
-function toggleMono() {
-    if (audioInput != realAudioInput) {
-        audioInput.disconnect();
-        realAudioInput.disconnect();
-        audioInput = realAudioInput;
-    } else {
-        realAudioInput.disconnect();
-        audioInput = convertToMono(realAudioInput);
-    }
-
-    audioInput.connect(inputPoint);
-}
-
 function gotStream(stream) {
     inputPoint = audioContext.createGain();
 
@@ -150,7 +139,7 @@ function gotStream(stream) {
     audioInput = realAudioInput;
     audioInput.connect(inputPoint);
 
-//    audioInput = convertToMono( input );
+    audioInput = convertToMono(audioInput);
 
     analyserNode = audioContext.createAnalyser();
     analyserNode.fftSize = 2048;
@@ -169,18 +158,17 @@ function initAudio() {
     var constraints = {
         "audio": {
             "mandatory": {
-                "googEchoCancellation": "false",
-                "googAutoGainControl": "false",
-                "googNoiseSuppression": "false",
-                "googHighpassFilter": "false"
+                "volume": 1,
+                "autoGainControl": "true", // added this
+                "channelcount": 2,
             },
             "optional": []
         }
     }
     navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
         gotStream(stream)
-    }).catch(function (e) {
-        console.log(e);
+    }).catch(function (error) {
+        console.log(error);
     });
 }
 

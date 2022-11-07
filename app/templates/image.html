@@ -38,14 +38,13 @@
         </div>
         <br>
 
-        <form method="post" style="text-align: center;" id="hiddenform" hidden></form>
         <div id="uploadingdiv" style="text-align: center;" hidden>
             uploading speech data ...
         </div>
         <div id="gonext" hidden>
             <div style="text-align: center">
                 <button id="btn_next" class="btn btn-info" value="next" onclick="send_arousal_valence()" disabled
-                    hidden>Continue
+                    hidden>{{ continue_text }}
                 </button>
             </div>
         </div>
@@ -77,20 +76,22 @@
         }
     }
 
-    function stop_send_recording() {
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function stop_send_recording() {
         document.getElementById('btn_stop').disabled = true;
-        document.getElementById('btn_start').disabled = true;
-        document.getElementById('startstopbtndiv').hidden = true;
-        document.getElementById('afbeelding').style.opacity = "0.0";
-        document.getElementById('uploadingdiv').hidden = false;
-        document.getElementById('gonext').hidden = false;
-        stopRecording();
-        document.getElementById('uploadingdiv').innerText = "";
-        document.getElementById('btn_next').disabled = false;
+        document.getElementById('uploadingdiv').removeAttribute('hidden');
+        await stopRecording();
+        // await sleep(1000); // TODO remove
+        document.getElementById('uploadingdiv').setAttribute('hidden', 'true');
+        document.getElementById('gonext').removeAttribute('hidden');
+        document.getElementById('btn_next').removeAttribute('disabled');
     }
 
     function send_arousal_valence() {
-        document.getElementById("hiddenform").submit();
+        location.reload();
     }
 </script>
 {% endblock %}

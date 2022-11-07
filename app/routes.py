@@ -83,8 +83,8 @@ def recording():
             photo_path=static_path,
             debug=Ac.FLASK_DEBUG.value,
             demo=db_name.lower() == "demo",
+            continue_text="Continue",
         )
-    # todo -> hoe iets verhogen door niet reload maar door op knop te klikken
     else:
         if session["allow_next"]:  # increase the image index
             print("-" * 10, "allow next granted", "-" * 10)
@@ -103,6 +103,11 @@ def recording():
         static_path = PISCES_RADBOUD_BD.get_img_path(
             img_name=img_name, db_name=db_name
         ).split("static/")[1]
+        continue_text = (
+            "Continue"
+            if session["img_index"] < len(session["img_order"]) - 1
+            else "Finish"
+        )
 
         return render_template(
             "image.html",
@@ -110,6 +115,7 @@ def recording():
             photo_path=static_path,
             debug=Ac.FLASK_DEBUG.value,
             demo=db_name.lower() == "demo",
+            continue_text=continue_text,
         )
 
 

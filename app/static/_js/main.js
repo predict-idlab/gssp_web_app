@@ -155,21 +155,22 @@ function gotStream(stream) {
 }
 
 function initAudio() {
-    var constraints = {
-        "audio": {
-            "mandatory": {
-                "volume": 1,
-                "autoGainControl": "true", // added this
-                "channelcount": 2,
+    if (audioRecorder === null) {
+        var constraints = {
+            "audio": {
+                "autoGainControl": false,
+                "echoCancellation": false,
+                "googAutoGainControl": false,
+                "noiseSuppression": false
             },
-            "optional": []
         }
+        navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+            gotStream(stream)
+        }).catch(function (error) {
+            console.log(error);
+            alert(error);
+        });
     }
-    navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-        gotStream(stream)
-    }).catch(function (error) {
-        console.log(error);
-    });
 }
 
 window.addEventListener('load', initAudio);

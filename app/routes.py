@@ -29,22 +29,30 @@ def index():
 
 
 @app.route("/home/<user_id>")
-def home(user_id):
+def experiment(user_id):
     headers = dict(request.headers)
     uuid_str = "_".join(["ACE", user_id, str(uuid.uuid4())])
     session["uuid"] = uuid_str
     session["user_id"] = user_id
 
-    # quick fix to allow multiple runs in same browser
-    # i.e., the /home/user_id route resets everything
-    session.pop("img_index", None)
-    session.pop("img_order", None)
-
     # store the user_id in the uuid folder
     SessionIOHandler.save_metadata_sf(
         uuid=uuid_str, metadata={"user_id": user_id, "headers": headers}
     )
-    return render_template("welcome_info.html", user_id=user_id)
+
+    # Construct the image order of the to-be saved images
+    img_order = [
+        ("Picture 81.jpg", "PisCES"),
+        ("Picture 88.jpg", "PisCES"),
+    ]
+
+    photo_paths = [
+        PISCES_RADBOUD_BD.get_img_path(img_name=img_name, db_name=db_name).split(
+            "static/"
+        )[1]
+        for img_name, db_name in img_order
+    ]
+    return render_template("experiment.html", user_id=user_id, photo_paths=photo_paths)
 
 
 def has_set_uuid(f):
@@ -57,66 +65,9 @@ def has_set_uuid(f):
     return wrap
 
 
-@app.route("/recording", methods=["GET", "POST"])
-@has_set_uuid
-def recording():
-    if "img_index" not in session:
-        # Base case: first time the recording page is loaded
-        session["img_order"] = [
-            ("Picture 81.jpg", "PisCES"),
-            ("Picture 88.jpg", "PisCES"),
-        ]
-        session["img_index"] = 0  # pointer to the current image
-
-        # Flag to allow a user to go to the next image
-        # NOTE: allow_next will be set to True when the audio was uploaded sucessfully
-        session["allow_next"] = False
-
-        # Get the first image it's path and render the template
-        img_name, db_name = session["img_order"][session["img_index"]]
-        static_path = PISCES_RADBOUD_BD.get_img_path(
-            img_name=img_name, db_name=db_name
-        ).split("static/")[1]
-        return render_template(
-            "image.html",
-            index=session["img_index"],
-            photo_path=static_path,
-            debug=Ac.FLASK_DEBUG.value,
-            demo=db_name.lower() == "demo",
-            continue_text="Continue",
-        )
-    else:
-        if session["allow_next"]:  # increase the image index
-            print("-" * 10, "allow next granted", "-" * 10)
-            session["img_index"] = session["img_index"] + 1
-
-            # edge case: last image
-            if session["img_index"] >= len(session["img_order"]):
-                return render_template("thank_you.html")
-
-            session["allow_next"] = False
-        else:
-            print("-" * 10, "NO ALLOW NEXT GRANTED", "-" * 10)
-
-        # load the next image and render the template
-        img_name, db_name = session["img_order"][session["img_index"]]
-        static_path = PISCES_RADBOUD_BD.get_img_path(
-            img_name=img_name, db_name=db_name
-        ).split("static/")[1]
-        continue_text = (
-            "Continue"
-            if session["img_index"] < len(session["img_order"]) - 1
-            else "Finish"
-        )
-
-        return render_template(
-            "image.html",
-            index=session["img_index"],
-            photo_path=static_path,
-            debug=Ac.FLASK_DEBUG.value,
-            demo=db_name.lower() == "demo",
-            continue_text=continue_text,
-        )
+@app.route("/thank_you")
+def thank_you():
+    return render_template("thank_you.html")
 
 
 # -------------------------------- API CALLS ------------------------------------------

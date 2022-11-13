@@ -1,0 +1,237 @@
+{% extends 'layout.html' %}
+
+{% block link %}
+<script src="{{ url_for('static', filename='_js/recorderWorker.js') }}"></script>
+<script src="{{ url_for('static', filename='_js/recorder.js') }}"></script>
+<script src="{{ url_for('static', filename='_js/audiodisplay.js') }}"></script>
+<script src="{{ url_for('static', filename='_js/main.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="col-xs-10">
+        <div class="jumbotron" style="background-color: #f9f9f9">
+            <h1 style="text-align: center;">Task instruction</h1>
+            <br>
+            <!-- DIV 1: desription -->
+            <div id="instruction-div" style="text-align: justify">
+                <h3>Describing images out loud</h3>
+                <p>
+                    This experiment will display two images which we would
+                    like you to describe out loud. On the next screen, you will see a
+                    green <i> "Start" </i> button and a red <i> "Stop" </i> button.
+                    Pressing on the start button begins the audio recording
+                    and will reveal the image. After this press, you start to
+                    describe the image out loud.
+                </p>
+                <p>
+                    <!-- Don't worry when you get stuck. Aim to describe the image -->
+                    <!-- spontaneously and without thinking too much about it.  -->
+                    Please describe the images in detail, what you see, what you feel,
+                    whatever comes to mind. There is no right or wrong response.
+                    Target speaking for at least 30 seconds.
+                    When you are finished describing the image, press the red stop button.
+                    <!-- You can for example imagine describing the image to someone who doesn't see it.  -->
+                    The raw speech recordings will be saved to a secure data server
+                    and you will be automatically redirected to the next image, where
+                    you will again see both start and stop buttons.
+                    <!--  -->
+                    After repeating this process on the next image, you will be guided
+                    towards a thank you page, after which you can close this browser tab.
+                </p>
+                <p>
+                    Clicking on the button below will prompt microphone access and
+                    open a page where you can check your audio quality.
+                </p>
+                <hr>
+                <br>
+                <div style="text-align: center">
+                    <button id="validate-btn" class="btn btn-primary" onclick="validate_audio()">Continue to audio
+                        quality
+                        check
+                    </button>
+                </div>
+            </div>
+            <!-- DIV 2: audio quality check -->
+            <div id="audio-check-div" style="text-align: center;" hidden>
+                <div style="display: inline-block; text-align: left;">
+                    <h5>Validate your audio quality:</h5>
+                </div>
+                <div class="container">
+                    <div style="text-align: center">
+                        <button id="check-start-btn" class="btn btn-success"
+                            onclick="wrap_start_recording_check()">Start
+                        </button>
+                        <button id="check-stop-btn" class="btn btn-danger" style="margin-left: 20px"
+                            onclick="stop_send_recording_check()" disabled>Stop
+                        </button>
+                        <button id="check-play-btn" class="btn btn-info" style="margin-left: 20px" onclick="play()"
+                            disabled>Play
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <canvas id="analyser" style="width:100%;height:150px;background-color: whitesmoke" width="1024"
+                    height="500"></canvas>
+                <textarea id="output" style="width: 100%;height: 100px" readonly hidden></textarea>
+                <hr>
+                <br>
+                <div style="text-align: center;">
+                    <button id="images-btn" class="btn btn-primary" onclick="show_first_img_div()" disabled>
+                        Continue to image description
+                    </button>
+                </div>
+            </div>
+            <!-- DIV 3: Photo paths -->
+            <div id="img0-div" hidden>
+                <img id="img0" src="{{ url_for('static', filename=photo_paths[0]) }}" alt="{{ photo_paths }}"
+                    style="max-height: 100%; opacity: 0;" />
+                <br>
+                <hr>
+                <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
+                    <p>Press start to display image and start describing</p>
+                    <button id="start-img0-btn" class="btn btn-success" onclick="wrap_start_recording(0)">Start</button>
+                    <button id="stop-img0-btn" class="btn btn-danger" style="margin-left: 20px"
+                        onclick="stop_send_recording(0)" disabled>Stop
+                    </button>
+                </div>
+                <br>
+                <div id="uploadingdiv0" style="text-align: center;" hidden>
+                    uploading speech data ...
+                </div>
+                <div id="gonext0" style="text-align: center">
+                    <button id="next0-btn" class="btn btn-primary" value="next" onclick="show_second_img()"
+                        disabled>Continue
+                    </button>
+                </div>
+            </div>
+            <div id="img1-div" hidden>
+                <img id="img1" src="{{ url_for('static', filename=photo_paths[1]) }}" alt="{{ photo_paths }}"
+                    style="max-height: 100%; opacity: 0;" />
+                <br>
+                <hr>
+                <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
+                    <p>Press start to display image and start describing</p>
+                    <button id="start-img1-btn" class="btn btn-success" onclick="wrap_start_recording(1)">Start</button>
+                    <button id="stop-img1-btn" class="btn btn-danger" style="margin-left: 20px"
+                        onclick="stop_send_recording(1)" disabled>Stop
+                    </button>
+                </div>
+                <br>
+                <div id="uploadingdiv1" style="text-align: center;" hidden>
+                    uploading speech data ...
+                </div>
+                <div id="gonext1" style="text-align: center">
+                    <button id="next1-btn" class="btn btn-primary" value="next" onclick="thank_you()" disabled>Finish
+                    </button>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+
+    {# This shouldnt be here but it works, so let's keep it here for now #}
+    <script>
+        var au = undefined;
+
+        // Override gotBuffers in main.js
+        // -> TODO -> re-implement this
+        function gotBuffers(buffers) {
+            console.log("gotBuffers v1");
+            audioRecorder.exportMonoWAV(createDownloadLink);
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ----------------- Audio quality check -----------------
+        function validate_audio() {
+            document.getElementById("validate-btn").disabled = true;
+            document.getElementById("instruction-div").hidden = true;
+            initAudio();
+            document.getElementById("audio-check-div").hidden = false;
+        }
+
+        function wrap_start_recording_check() {
+            document.getElementById('check-start-btn').disabled = true;
+            document.getElementById('check-stop-btn').removeAttribute('disabled');
+            startRecording();
+        }
+
+        function stop_send_recording_check() {
+            stopRecording();
+            document.getElementById('check-stop-btn').disabled = true;
+            document.getElementById('check-start-btn').disabled = false;
+            document.getElementById('check-play-btn').disabled = false;
+            document.getElementById('images-btn').disabled = false;
+        }
+
+        function play() {
+            if (au.paused) {
+                au.play();
+            }
+        }
+
+        // load first image
+        function show_first_img_div() {
+            gotBuffers = function (buffers, file_id) {
+                console.log("gotBuffers v2");
+                img_id = "img0";
+                btn_next_id = "next0-btn";
+                audioRecorder.exportWAV(doneEncoding);
+            };
+            document.getElementById('audio-check-div').hidden = true;
+            document.getElementById('img0-div').hidden = false;
+        }
+
+        // ----------------- Image description -----------------
+        function wrap_start_recording(index) {
+            startRecording();
+            document.getElementById('start-img' + index + '-btn').disabled = true;
+            document.getElementById('stop-img' + index + '-btn').removeAttribute('disabled');
+            document.getElementById('img' + index).style.opacity = "1.0";
+        }
+
+        async function stop_send_recording(index) {
+            document.getElementById('stop-img' + index + '-btn').disabled = true;
+            document.getElementById('uploadingdiv' + index).removeAttribute('hidden');
+            await stopRecording();
+            await sleep(150);  // TODO remove
+            document.getElementById('uploadingdiv' + index).setAttribute('hidden', 'true');
+            // document.getElementById('next' + index + '-btn').removeAttribute('disabled');
+        }
+
+        // show second img
+        function show_second_img() {
+            gotBuffers = function (buffers, file_id) {
+                console.log("gotBuffers v3");
+                img_id = "img1";
+                btn_next_id = "next1-btn";
+                audioRecorder.exportWAV(doneEncoding);
+            };
+            document.getElementById('img0-div').hidden = true;
+            document.getElementById('img1-div').hidden = false;
+        }
+
+        function thank_you() {
+            var root = location.protocol + '//' + location.host;
+            window.location.href = root + '/thank_you';
+        }
+
+
+        function createDownloadLink(blob) {
+            var url = window.URL.createObjectURL(blob);
+            au = document.createElement('audio');
+
+            //add controls to the <audio> element
+            au.controls = false;
+            au.autoplay = true
+            au.src = url;
+
+            //add the new audio element to
+            document.body.appendChild(au)
+        }
+    </script>
+</div>
+{% endblock %}

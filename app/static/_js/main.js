@@ -27,15 +27,18 @@ var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
 
+// The button and image which will be used for the sound blob post-request
+var img_id = null;
+var btn_next_id = null;
 
 function gotBuffers(buffers, file_id) {
     audioRecorder.exportWAV(doneEncoding);
 }
 
-function doneEncoding(soundBlob) {
+function doneEncoding(soundBlob, file_id) {
     // fetch('/audio', {method: "POST", body: soundBlob}).then(response => $('#output').text(response.text()))
     // TODO -> change this hard_coded file name code
-    let file_name = document.getElementById('afbeelding').src.split('/');
+    let file_name = document.getElementById(img_id).src.split('/');
     file_name = file_name.slice(Math.max(file_name.length - 2, 1)).join('/').split('.')[0];
     file_name += "__" + new Date().toLocaleTimeString('nl-BE', { hour12: false });
 
@@ -47,8 +50,8 @@ function doneEncoding(soundBlob) {
         contentType: false,
         success: function (response) {
             console.log(response)
-            document.getElementById('btn_next').hidden = false;
-            document.getElementById('output').innerHTML = response;
+            document.getElementById(btn_next_id).hidden = false;
+            document.getElementById(btn_next_id).disabled = false;
             // Do something after the sleep!
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -173,7 +176,6 @@ function initAudio() {
     }
 }
 
-window.addEventListener('load', initAudio);
 
 function unpause() {
     document.getElementById('init').style.display = 'none';

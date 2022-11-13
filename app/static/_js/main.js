@@ -49,7 +49,7 @@ function doneEncoding(soundBlob, file_id) {
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log(response)
+            console.log(response);
             document.getElementById(btn_next_id).hidden = false;
             document.getElementById(btn_next_id).disabled = false;
             // Do something after the sleep!

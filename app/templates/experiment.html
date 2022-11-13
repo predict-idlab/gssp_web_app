@@ -134,8 +134,7 @@
     <script>
         var au = undefined;
 
-        // Override gotBuffers in main.js
-        // -> TODO -> re-implement this
+        // Override gotBuffers in main.js to play-back audio
         function gotBuffers(buffers) {
             console.log("gotBuffers v1");
             audioRecorder.exportMonoWAV(createDownloadLink);
@@ -175,10 +174,10 @@
 
         // load first image
         function show_first_img_div() {
+            // note -> we override again the `gotBuffers` function to ensure that 
+            // the speech samples will be uploaded
             gotBuffers = function (buffers, file_id) {
                 console.log("gotBuffers v2");
-                img_id = "img0";
-                btn_next_id = "next0-btn";
                 audioRecorder.exportWAV(doneEncoding);
             };
             document.getElementById('audio-check-div').hidden = true;
@@ -194,22 +193,17 @@
         }
 
         async function stop_send_recording(index) {
+            img_id = "img" + index;
+            btn_next_id = "next" + index + "-btn";
             document.getElementById('stop-img' + index + '-btn').disabled = true;
             document.getElementById('uploadingdiv' + index).removeAttribute('hidden');
             await stopRecording();
-            await sleep(150);  // TODO remove
+            await sleep(100);
             document.getElementById('uploadingdiv' + index).setAttribute('hidden', 'true');
-            // document.getElementById('next' + index + '-btn').removeAttribute('disabled');
         }
 
         // show second img
         function show_second_img() {
-            gotBuffers = function (buffers, file_id) {
-                console.log("gotBuffers v3");
-                img_id = "img1";
-                btn_next_id = "next1-btn";
-                audioRecorder.exportWAV(doneEncoding);
-            };
             document.getElementById('img0-div').hidden = true;
             document.getElementById('img1-div').hidden = false;
         }
@@ -218,7 +212,6 @@
             var root = location.protocol + '//' + location.host;
             window.location.href = root + '/thank_you';
         }
-
 
         function createDownloadLink(blob) {
             var url = window.URL.createObjectURL(blob);

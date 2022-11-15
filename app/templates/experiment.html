@@ -11,51 +11,44 @@
 <div class="container">
     <div class="col-xs-10">
         <div class="jumbotron" style="background-color: #f9f9f9">
-            <h1 style="text-align: center;">Task instruction</h1>
-            <br>
             <!-- DIV 1: desription -->
             <div id="instruction-div" style="text-align: justify">
-                <h3>Describing images out loud</h3>
-                <p>
-                    This experiment will display two images which we would
-                    like you to describe out loud. On the next screen, you will see a
-                    green <i> "Start" </i> button and a red <i> "Stop" </i> button.
-                    Pressing on the start button begins the audio recording
-                    and will reveal the image. After this press, you start to
-                    describe the image out loud.
-                </p>
-                <p>
-                    <!-- Don't worry when you get stuck. Aim to describe the image -->
-                    <!-- spontaneously and without thinking too much about it.  -->
-                    Please describe the images in detail, what you see, what you feel,
-                    whatever comes to mind. There is no right or wrong response.
-                    Target speaking for at least 30 seconds.
-                    When you are finished describing the image, press the red stop button.
-                    <!-- You can for example imagine describing the image to someone who doesn't see it.  -->
-                    The raw speech recordings will be saved to a secure data server
-                    and you will be automatically redirected to the next image, where
-                    you will again see both start and stop buttons.
-                    <!--  -->
-                    After repeating this process on the next image, you will be guided
-                    towards a thank you page, after which you can close this browser tab.
-                </p>
-                <p>
-                    Clicking on the button below will prompt microphone access and
-                    open a page where you can check your audio quality.
-                </p>
-                <hr>
+                <h3 style="text-align: center;">Describing images out loud</h3>
                 <br>
+                <p>
+                    Recent research has shown that someone's voice might contain information
+                    with regard to how they are feeling. In the current study, we want to
+                    further develop these methods by recording a small segment of speech
+                    of you describing an image out loud. These recordings will be securely
+                    stored and analyzed automatically by a computer so no human will listen
+                    to them. This task takes a total of 5 minutes. First, we will test
+                    whether your microphone works correctly. Your browser will prompt you to give
+                    microphone access.
+                    <hr>
+                    <br>
                 <div style="text-align: center">
-                    <button id="validate-btn" class="btn btn-primary" onclick="validate_audio()">Continue to audio
-                        quality
-                        check
-                    </button>
+                    <button id="validate-btn" class="btn btn-primary" onclick="validate_audio()">Continue to microphone
+                        check</button>
                 </div>
             </div>
             <!-- DIV 2: audio quality check -->
             <div id="audio-check-div" style="text-align: center;" hidden>
                 <div style="display: inline-block; text-align: left;">
-                    <h5>Validate your audio quality:</h5>
+                    <h3 style="text-align: center;">Validate your audio quality:</h3>
+                    <br>
+                    <p style="text-align: justify;">
+                        Click the “Start” button to start a recording, and press “Stop” to
+                        finish. Use the “Play” button to listen to your recording. If the
+                        recording works, you can continue to the task.<br><br>
+                        During the task, you will see an image which we would like you
+                        to describe out loud. The image appears when you click the green
+                        “Start” button. You can click “Stop” when you are finished to
+                        stop the recording. Please describe the image in detail, what
+                        you see, what you feel, whatever comes to mind. There is no right
+                        or wrong response, but try to speak for at least 30 seconds.
+                        You will see a total of 2 images, after that the task if
+                        finished and your data is saved.
+                    </p>
                 </div>
                 <div class="container">
                     <div style="text-align: center">
@@ -89,16 +82,17 @@
                 <br>
                 <hr>
                 <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
-                    <p>Press start to display image and start describing</p>
+                    <p id="start0text">Press "Start" to display image and start describing</p>
+                    <p id="stop0text" hidden>
+                        If you cannot click "Continue" yet, it means your data is still
+                        loading, this can take a few seconds.
+                    </p>
                     <button id="start-img0-btn" class="btn btn-success" onclick="wrap_start_recording(0)">Start</button>
                     <button id="stop-img0-btn" class="btn btn-danger" style="margin-left: 20px"
                         onclick="stop_send_recording(0)" disabled>Stop
                     </button>
                 </div>
                 <br>
-                <div id="uploadingdiv0" style="text-align: center;" hidden>
-                    uploading speech data ...
-                </div>
                 <div id="gonext0" style="text-align: center">
                     <button id="next0-btn" class="btn btn-primary" value="next" onclick="show_second_img()"
                         disabled>Continue
@@ -111,22 +105,22 @@
                 <br>
                 <hr>
                 <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
-                    <p>Press start to display image and start describing</p>
+                    <p id="start1text">Press "Start" to display image and start describing</p>
+                    <p id="stop1text" hidden>
+                        If you cannot click "Finish" yet, it means your data is still
+                        loading, this can take a few seconds.
+                    </p>
                     <button id="start-img1-btn" class="btn btn-success" onclick="wrap_start_recording(1)">Start</button>
                     <button id="stop-img1-btn" class="btn btn-danger" style="margin-left: 20px"
                         onclick="stop_send_recording(1)" disabled>Stop
                     </button>
                 </div>
                 <br>
-                <div id="uploadingdiv1" style="text-align: center;" hidden>
-                    uploading speech data ...
-                </div>
                 <div id="gonext1" style="text-align: center">
                     <button id="next1-btn" class="btn btn-primary" value="next" onclick="thank_you()" disabled>Finish
                     </button>
                 </div>
             </div>
-            <br>
         </div>
     </div>
 
@@ -196,10 +190,11 @@
             img_id = "img" + index;
             btn_next_id = "next" + index + "-btn";
             document.getElementById('stop-img' + index + '-btn').disabled = true;
-            document.getElementById('uploadingdiv' + index).removeAttribute('hidden');
+            document.getElementById("start" + index + "text").hidden = true;
+            document.getElementById("stop" + index + "text").hidden = false;
+            await sleep(50);
             await stopRecording();
             await sleep(100);
-            document.getElementById('uploadingdiv' + index).setAttribute('hidden', 'true');
         }
 
         // show second img

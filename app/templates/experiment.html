@@ -13,17 +13,19 @@
         <div class="jumbotron" style="background-color: #f9f9f9">
             <!-- DIV 1: desription -->
             <div id="instruction-div" style="text-align: justify">
-                <h3 style="text-align: center;">Describing images out loud</h3>
+                <h3 style="text-align: center;">Describing Images Out Loud</h3>
                 <br>
                 <p>
-                    Recent research has shown that someone's voice might contain information
-                    with regard to how they are feeling. In the current study, we want to
-                    further develop these methods by recording a small segment of speech
-                    of you describing an image out loud. These recordings will be securely
-                    stored and analyzed automatically by a computer so no human will listen
-                    to them. This task takes a total of 5 minutes. First, we will test
-                    whether your microphone works correctly. Your browser will prompt you to give
-                    microphone access.
+                    Recent research has shown that a person’s voice may contain information
+                    about how they feel. In this study, we want to test this possibility
+                    by recording a short speech clip while you describe two images out
+                    loud. These recordings will be analyzed automatically by a computer
+                    and no human will ever listen to them. This will take approximately 5
+                    minutes.
+                    <br><br>
+                    First, let’s make sure your microphone works correctly. Your web browser
+                    will ask you for microphone access only for this website. Click below
+                    to continue with the test.
                     <hr>
                     <br>
                 <div style="text-align: center">
@@ -34,20 +36,15 @@
             <!-- DIV 2: audio quality check -->
             <div id="audio-check-div" style="text-align: center;" hidden>
                 <div style="display: inline-block; text-align: left;">
-                    <h3 style="text-align: center;">Validate your audio quality:</h3>
+                    <h3 style="text-align: center;">Check Your Audio</h3>
                     <br>
                     <p style="text-align: justify;">
+                        Click the “Start” button to start a recording and press “Stop”
+                        to finish recording. Then, use the “Play” button to listen to
+                        your recording. If the recording works, click below to continue.
                         Click the “Start” button to start a recording, and press “Stop” to
-                        finish. Use the “Play” button to listen to your recording. If the
-                        recording works, you can continue to the task.<br><br>
-                        During the task, you will see an image which we would like you
-                        to describe out loud. The image appears when you click the green
-                        “Start” button. You can click “Stop” when you are finished to
-                        stop the recording. Please describe the image in detail, what
-                        you see, what you feel, whatever comes to mind. There is no right
-                        or wrong response, but try to speak for at least 30 seconds.
-                        You will see a total of 2 images, after that the task if
-                        finished and your data is saved.
+                        finish recording. Use the “Play” button to listen to your recording. If the
+                        recording works, you can continue to the task.
                     </p>
                 </div>
                 <div class="container">
@@ -70,19 +67,46 @@
                 <hr>
                 <br>
                 <div style="text-align: center;">
-                    <button id="images-btn" class="btn btn-primary" onclick="show_first_img_div()" disabled>
+                    <button id="instruction-btn" class="btn btn-primary" onclick="show_instruction_div()" disabled>
+                        Continue to instructions
+                    </button>
+                </div>
+            </div>
+            <!-- DIV 3: image description instructions -->
+            <div id="img-instruction-div" hidden>
+                <h3 style="text-align: center;">Image Description Instructions</h3>
+                <br>
+                <p style="text-align: justify;">
+                    On the next page, you will see an image that we would like you to
+                    describe out loud. The image will appear when you click the green
+                    “Start” button. When you are finished describing the image, click “Stop”.
+                    <br><br>
+                    Please describe the image in detail, focusing on what you see, what
+                    you feel, and whatever else comes to mind. There is no right or
+                    wrong response, but please speak for at least 30 seconds about the image.
+                    <br><br>
+                    You will then click Continue to see a second image. After that,
+                    you are finished!
+                </p>
+                <hr>
+                <br>
+                <div style="text-align: center;">
+                    <button id="images-btn" class="btn btn-primary" onclick="show_first_img_div()">
                         Continue to image description
                     </button>
                 </div>
             </div>
-            <!-- DIV 3: Photo paths -->
+            <!-- DIV 4: photo descriptions -->
             <div id="img0-div" hidden>
                 <img id="img0" src="{{ url_for('static', filename=photo_paths[0]) }}" alt="{{ photo_paths }}"
                     style="max-height: 100%; opacity: 0;" />
                 <br>
                 <hr>
                 <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
-                    <p id="start0text">Press "Start" to display image and start describing</p>
+                    <p id="start0text">
+                        Press "Start" to show the image. Please describe the image for
+                        at least 30 seconds.
+                    </p>
                     <p id="stop0text" hidden>
                         If you cannot click "Continue" yet, it means your data is still
                         loading, this can take a few seconds.
@@ -105,7 +129,10 @@
                 <br>
                 <hr>
                 <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
-                    <p id="start1text">Press "Start" to display image and start describing</p>
+                    <p id="start1text">
+                        Press "Start" to show the image.
+                        Please describe the image for at least 30 seconds.
+                    </p>
                     <p id="stop1text" hidden>
                         If you cannot click "Finish" yet, it means your data is still
                         loading, this can take a few seconds.
@@ -157,13 +184,19 @@
             document.getElementById('check-stop-btn').disabled = true;
             document.getElementById('check-start-btn').disabled = false;
             document.getElementById('check-play-btn').disabled = false;
-            document.getElementById('images-btn').disabled = false;
+            document.getElementById('instruction-btn').disabled = false;
         }
 
         function play() {
             if (au.paused) {
                 au.play();
             }
+        }
+
+        // ----------------- Image description instructions -----------------
+        function show_instruction_div() {
+            document.getElementById("audio-check-div").hidden = true;
+            document.getElementById("img-instruction-div").hidden = false;
         }
 
         // load first image
@@ -174,7 +207,7 @@
                 console.log("gotBuffers v2");
                 audioRecorder.exportWAV(doneEncoding);
             };
-            document.getElementById('audio-check-div').hidden = true;
+            document.getElementById('img-instruction-div').hidden = true;
             document.getElementById('img0-div').hidden = false;
         }
 

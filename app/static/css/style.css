@@ -4,8 +4,13 @@ img {
   object-fit: contain;
 }
 
+body {
+  overflow: scroll;
+  /* Show scrollbars */
+}
+
 video {
   /* override other styles to make responsive */
-  width: 100%    !important;
-  height: auto   !important;
+  width: 100% !important;
+  height: auto !important;
 }

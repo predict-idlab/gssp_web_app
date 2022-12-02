@@ -100,23 +100,16 @@
                 <br>
                 <hr>
                 <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
-                    <p id="start0text">
-                        Press "Start" to show the image. Please describe the image for
-                        at least 30 seconds.
-                    </p>
                     <p id="stop0text" hidden>
-                        If you cannot click "Continue" yet, it means your data is still
-                        loading, this can take a few seconds.
+                        Your data is loading, the next screen will appear when it is
+                        finished. This can take a few seconds.
                     </p>
-                    <button id="start-img0-btn" class="btn btn-success" onclick="wrap_start_recording(0)">Start</button>
-                    <button id="stop-img0-btn" class="btn btn-danger" style="margin-left: 20px"
-                        onclick="stop_send_recording(0)" disabled>Stop
-                    </button>
-                </div>
-                <br>
-                <div id="gonext0" style="text-align: center">
-                    <button id="next0-btn" class="btn btn-primary" value="next" onclick="show_second_img()"
-                        disabled>Continue
+                    <button id="start-img0-btn" class="btn btn-success" style="text-align: center;"
+                        onclick="wrap_start_recording(0)">
+                        Click here to show the image<br>and start describing</button><br><br>
+                    <button id="stop-img0-btn" class="btn btn-danger" style="text-align: center;"
+                        onclick="stop_send_recording(0)" disabled>
+                        Click here after describing the<br>image for at least 30 seconds
                     </button>
                 </div>
             </div>
@@ -126,29 +119,23 @@
                 <br>
                 <hr>
                 <div id="startstopbtndiv" class="container-fluid" style="text-align: center">
-                    <p id="start1text">
-                        Press "Start" to show the image.
-                        Please describe the image for at least 30 seconds.
-                    </p>
                     <p id="stop1text" hidden>
-                        If you cannot click "Finish" yet, it means your data is still
-                        loading, this can take a few seconds.
+                        Your data is loading, the next screen will appear when it is
+                        finished. This can take a few seconds.
                     </p>
-                    <button id="start-img1-btn" class="btn btn-success" onclick="wrap_start_recording(1)">Start</button>
-                    <button id="stop-img1-btn" class="btn btn-danger" style="margin-left: 20px"
-                        onclick="stop_send_recording(1)" disabled>Stop
-                    </button>
-                </div>
-                <br>
-                <div id="gonext1" style="text-align: center">
-                    <button id="next1-btn" class="btn btn-primary" value="next" onclick="thank_you()" disabled>Finish
+                    <button id="start-img1-btn" class="btn btn-success" style="text-align: center;"
+                        onclick="wrap_start_recording(1)">
+                        Click here to show the image<br>and start describing</button><br><br>
+                    <button id="stop-img1-btn" class="btn btn-danger" style="text-align: center;"
+                        onclick="stop_send_recording(1)" disabled>
+                        Click here after describing the<br>image for at least 30 seconds
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    {# This shouldnt be here but it works, so let's keep it here for now #}
+    {# This shouldn't be here but it works, so let's keep it here for now #}
     <script>
         var au = undefined;
 
@@ -218,19 +205,19 @@
 
         async function stop_send_recording(index) {
             img_id = "img" + index;
-            btn_next_id = "next" + index + "-btn";
             document.getElementById('stop-img' + index + '-btn').disabled = true;
-            document.getElementById("start" + index + "text").hidden = true;
+            // document.getElementById("start" + index + "text").hidden = true;
             document.getElementById("stop" + index + "text").hidden = false;
             await sleep(50);
             await stopRecording();
             await sleep(100);
-        }
-
-        // show second img
-        function show_second_img() {
-            document.getElementById('img0-div').hidden = true;
-            document.getElementById('img1-div').hidden = false;
+            document.getElementById('img' + index + '-div').hidden = true;
+            if (index < 1) {
+                document.getElementById('img' + (index + 1) + '-div').hidden = false;
+            }
+            else {
+                thank_you();
+            }
         }
 
         function thank_you() {

@@ -46,6 +46,7 @@ function doneEncoding(soundBlob, file_id) {
         type: "POST",
         url: `/audio/wav/` + file_name,
         data: soundBlob,
+        async: false,
         processData: false,
         contentType: false,
         success: function (response) {

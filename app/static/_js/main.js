@@ -51,6 +51,7 @@ function doneEncoding(soundBlob, file_id) {
         success: function (response) {
             console.log(response);
             if (btn_next_id) {
+                console.log('adjusting next button');
                 document.getElementById(btn_next_id).hidden = false;
                 document.getElementById(btn_next_id).disabled = false;
             }

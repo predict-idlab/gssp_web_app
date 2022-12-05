@@ -137,6 +137,7 @@
 
     {# This shouldn't be here but it works, so let's keep it here for now #}
     <script>
+        btn_next_id = 'instruction-btn';
         var au = undefined;
 
         // Override gotBuffers in main.js to play-back audio
@@ -210,7 +211,7 @@
             document.getElementById("stop" + index + "text").hidden = false;
             await sleep(50);
             await stopRecording();
-            await sleep(100);
+            await sleep(200);
             document.getElementById('img' + index + '-div').hidden = true;
             if (index < 1) {
                 document.getElementById('img' + (index + 1) + '-div').hidden = false;

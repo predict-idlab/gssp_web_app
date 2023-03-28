@@ -2,10 +2,10 @@
 
 This repository contains the web app implementation that was utilized to collect data in order to assess the acoustic properties of the *Ghent Semi-spontaneous Speech Paradigm* (GSSP), a new speech acquisition methodology in which participants were asked to describe images with a constant emotional load. 
 
-89 Dutch-speaking participants fulfilled the web-app speech acquistion, which were enrolled through leveraging the researchers their network and the [prolific](https://www.prolific.co/) platform. 
+89 Dutch-speaking participants fulfilled the web-app speech acquisition, which were enrolled through leveraging the researchers' network and the [prolific](https://www.prolific.co/) platform. 
 
 **relevant links**:
-- The dataset can be found on [Kaggle](https://kaggle.com/datasets/b5f57e5896f6035b509bd335c062166df0560ff637fd62196a5356c0d425c081)
+- The dataset can be found on [Kaggle](https://www.kaggle.com/datasets/jonvdrdo/gssp-web-app-data)
 - a preprint of the manuscript can be found on [psyarxiv]()
 - The the GSSP dataset [analysis notebooks]()
 
@@ -20,7 +20,7 @@ Prior to the the web app its data acquisition, the participants loop through the
     - the participants were instructed to read aloud the fixed "Marloes" text
 4. A 5 minute `Rest` should bring participants into a neutral baseline state
 
-- The First acquisition consists of the Rad-aloud `Marloes` task afer which the particpants fills in their experienced arousal and valence values during the task.
+- The First acquisition consists of the Read-aloud `Marloes` task, after which the participants fill in their experienced arousal and valence values during the task.
 ![](img/task_flow_marloes.png)
 - Afterwards, 5 PSSG Picture descriptions were acquired (alternating between the [Radboud](app/static/img/Radboud/) and [PiSCES](app/static/img/PiSCES/) image subset). The first shown image always originates from the PiSCES subset. After each image, the participants filled in their experienced arousal and valence values during the task.
 ![](img/task_flow.png)
@@ -77,3 +77,9 @@ docker build .
 # test the image
 docker run -it -p 8081:80 <IMAGE_ID>
 ```
+
+---
+
+<p align="center">
+👤 <i>Jonas Van Der Donckt, Mitchel Kappen</i>
+</p>

@@ -7,7 +7,7 @@ This repository contains the web app implementation that was utilized to collect
 **relevant links**:
 - The dataset can be found on [Kaggle](https://www.kaggle.com/datasets/jonvdrdo/gssp-web-app-data)
 - a preprint of the manuscript can be found on [psyarxiv]()
-- The the GSSP dataset [analysis notebooks]()
+- The the GSSP dataset [analysis notebooks](https://github.com/predict-idlab/gssp_analysis)
 
 ## Web app structure
 ![](img/global_flow.png)

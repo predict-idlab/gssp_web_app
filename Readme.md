@@ -27,7 +27,7 @@ Prior to the the web app its data acquisition, the participants loop through the
 
 This was repeated 6 times, follwed by a Final Marloes acquisition, resulting in a total of 7 Marloes samples, 15 Pisces samples and 15 Radboud samples per participant.
 
-The GSSP is already used in other studies. For example, the [fce_stripped]() branch contains a stripped version of the app in which participants who experienced Adverse Childhood events, filled in this quaestionnaire.
+The GSSP is already used in other studies. For example, the [fce_stripped](https://github.com/predict-idlab/gssp_web_app/tree/fce_stripped) branch contains a stripped version of the app in which participants who experienced Adverse Childhood events, filled in this quaestionnaire.
 
 
 ---

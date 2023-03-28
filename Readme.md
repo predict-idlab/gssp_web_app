@@ -7,7 +7,7 @@ This repository contains the web app implementation that was utilized to collect
 **relevant links**:
 - The dataset can be found on [Kaggle](https://kaggle.com/datasets/b5f57e5896f6035b509bd335c062166df0560ff637fd62196a5356c0d425c081)
 - a preprint of the manuscript can be found on [psyarxiv]()
-- The analysis of the dataset can be found on the [analysis]()
+- The the GSSP dataset [analysis notebooks]()
 
 ## Web app structure
 ![](img/global_flow.png)
